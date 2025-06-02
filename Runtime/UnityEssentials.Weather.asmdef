@@ -1,13 +1,19 @@
 {
     "name": "UnityEssentials.Weather",
-    "allowUnsafeCode": false,
-    "noEngineReferences": false,
-    "overrideReferences": false,
-    "autoReferenced": true,
     "rootNamespace": "UnityEssentials",
-    "references": [],
-    "precompiledReferences": [],
+    "references": [
+        "GUID:df380645f10b7bc4b97d4f5eb6303d95",
+        "GUID:457756d89b35d2941b3e7b37b4ece6f1",
+        "GUID:40ccf8ace799d954991e3c03c59c44ee",
+        "GUID:f054f0258fed7844e9dada987e3e00a4"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
-    "defineConstraints": []
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }

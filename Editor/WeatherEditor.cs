@@ -1,6 +1,8 @@
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.HighDefinition;
 
 namespace UnityEssentials
 {
@@ -13,6 +15,15 @@ namespace UnityEssentials
             if (prefab != null)
             {
                 var weather = prefab.GetComponent<Weather>();
+                weather.CloudLayerVolume = prefab.transform.Find("Cloud Layer Volume")?.GetComponent<Volume>();
+                weather.VolumetricCloudsVolume = prefab.transform.Find("Volumetric Clouds Volume")?.GetComponent<Volume>();
+                weather.VolumetricFogVolume = prefab.transform.Find("Volumetric Fog Volume")?.GetComponent<Volume>();
+                if (weather.CloudLayerVolume.profile.TryGet<CloudLayer>(out var cloudLayerOverride))
+                    weather.CloudsLayerOverride = cloudLayerOverride; 
+                if (weather.VolumetricCloudsVolume.profile.TryGet<VolumetricClouds>(out var volumetricCloudsOverride))
+                    weather.VolumetricCloudsOverride = volumetricCloudsOverride;
+                if (weather.VolumetricFogVolume.profile.TryGet<Fog>(out var volumetricFogOverride))
+                    weather.VolumetricFogOverride = volumetricFogOverride;
             }
 
             GameObjectUtility.SetParentAndAlign(prefab, menuCommand.context as GameObject);

@@ -1,5 +1,54 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3093281137181228124
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6823861589880065564}
+  - component: {fileID: 7730018157552857895}
+  m_Layer: 0
+  m_Name: Volumetric Fog Volume
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6823861589880065564
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3093281137181228124}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -1, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5955971541579168707}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7730018157552857895
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3093281137181228124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IsGlobal: 1
+  priority: 1
+  blendDistance: 0
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: 2e28bad117218e347a8ce8f9e1c18e68, type: 2}
 --- !u!1 &3526313086034281984
 GameObject:
   m_ObjectHideFlags: 0
@@ -45,7 +94,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_IsGlobal: 1
-  priority: 0
+  priority: 1
   blendDistance: 0
   weight: 1
   sharedProfile: {fileID: 11400000, guid: c603ae1fbcc2dbe41828ce84bc348186, type: 2}
@@ -94,7 +143,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_IsGlobal: 1
-  priority: 0
+  priority: 1
   blendDistance: 0
   weight: 1
   sharedProfile: {fileID: 11400000, guid: b46b2fab5bb18b5489e4481889a4015d, type: 2}
@@ -130,6 +179,7 @@ Transform:
   m_Children:
   - {fileID: 3445869608376784209}
   - {fileID: 3373055416523671864}
+  - {fileID: 6823861589880065564}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3945389553218147537
@@ -144,3 +194,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0dd7ff8df8e68144c9cc1816f1056abf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CloudLayerVolume: {fileID: 0}
+  CloudsLayerOverride: {fileID: 0}
+  VolumetricCloudsVolume: {fileID: 0}
+  VolumetricCloudsOverride: {fileID: 0}
+  CloudCover:
+    Clear: 0
+    Sparse: 0
+    Cloudy: 0
+    Overcast: 0
+  Precipitation:
+    Drizzle: 0
+    Shower: 0
+    Sleet: 0
+    Snowy: 0
+    Blizzard: 0
+  SevereWeather:
+    Stormy: 0
+    Thunderstorm: 0
+    Tornado: 0
+    Hurricane: 0
+    Sandstorm: 0
+  AtmosphericEffects:
+    Foggy: 0
+    Mist: 0
+    Hazy: 0
+    Dusty: 0
+    Windy: 0

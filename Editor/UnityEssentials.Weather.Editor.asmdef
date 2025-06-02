@@ -2,6 +2,8 @@
     "name": "UnityEssentials.Weather.Editor",
     "rootNamespace": "UnityEssentials",
     "references": [
+        "GUID:df380645f10b7bc4b97d4f5eb6303d95",
+        "GUID:457756d89b35d2941b3e7b37b4ece6f1",
         "GUID:0c677762363426746abd6799d82d40b8",
         "GUID:d681bfdefaae13a4395b7c134e9761d2"
     ],
