@@ -236,6 +236,7 @@ namespace UnityEssentials
             VolumetricCloudsOverride.densityMultiplier.Override(VolumetricCloudsDensity);
             // Eliminates blue tint from clouds at night
             VolumetricCloudsOverride.ambientLightProbeDimmer.Override(TimeOfDay.DayWeight);
+            VolumetricCloudsOverride.enable.Override(Settings.EnableVolumetricClouds);
 
             CloudsLayerOverride.opacity.Override(CloudLayerDensity);
             CloudsLayerOverride.layerA.opacityR.Override(CloudCover.Sparse * CloudLayerCoverage);
