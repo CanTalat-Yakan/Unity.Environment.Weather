@@ -96,15 +96,14 @@ namespace UnityEssentials
         {
             CameraHeight = GetCurrentRenderingCameraHeight();
 
-            float cloudLayerBase = 10_000;
-            float volumetricCloudsBase = 100_000;
+            float cloudLayerThreshold = 10_000;
+            float volumetricCloudsThreshold = 50_000;
 
-            float normCloudLayer = Mathf.Clamp01(CameraHeight / cloudLayerBase);
-            float normVolumetric = Mathf.Clamp01(CameraHeight / volumetricCloudsBase);
+            float normCloudLayer = Mathf.Clamp01(CameraHeight / cloudLayerThreshold);
+            float normVolumetric = Mathf.Clamp01(CameraHeight / volumetricCloudsThreshold);
 
-            float k = 6f;
-            CloudLayerOpacity = Mathf.Log(1 + k * (1 - normCloudLayer)) / Mathf.Log(1 + k);
-            VolumetricCloudsOpacity = Mathf.Log(1 + k * (1 - normVolumetric)) / Mathf.Log(1 + k);
+            CloudLayerOpacity = 1 - normCloudLayer;
+            VolumetricCloudsOpacity = 1 - normVolumetric;
         }
 
         public void UpdateWeather()
@@ -226,11 +225,11 @@ namespace UnityEssentials
             // Prefer SceneView camera if available and focused
             var sceneView = SceneView.lastActiveSceneView;
             if (sceneView != null && sceneView.camera != null && sceneView.hasFocus)
-                return Mathf.Max(100, sceneView.camera.transform.position.y);
+                return Mathf.Max(100, sceneView.camera.transform.position.magnitude);
 #endif
             // Fallback to main camera
             if (Camera.main != null)
-                return Mathf.Max(100, Camera.main.transform.position.y);
+                return Mathf.Max(100, Camera.main.transform.position.magnitude);
 
             return 0f;
         }
