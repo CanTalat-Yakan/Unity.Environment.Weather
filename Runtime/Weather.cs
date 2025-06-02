@@ -64,6 +64,12 @@ namespace UnityEssentials
         [Range(0, 1)] public float Windy;
     }
 
+    [Serializable]
+    public class CloudsSettings
+    {
+        public bool EnableVolumetricClouds = true;
+    }
+
     [ExecuteAlways]
     public class Weather : MonoBehaviour
     {
@@ -74,18 +80,21 @@ namespace UnityEssentials
         [HideInInspector] public Volume VolumetricFogVolume;
         [HideInInspector] public Fog VolumetricFogOverride;
 
+        public CloudsSettings Settings;
         public CloudCoverType CloudCover;
         public PrecipitationType Precipitation;
         public SevereWeatherType SevereWeather;
         public AtmosphericEffectType AtmosphericEffects;
 
-        public float CloudLayerOpacity {get; private set; }
-        public float VolumetricCloudsOpacity {get; private set; }
-        public float FogDensity {get; private set; }
-        public float CloudCoverage {get; private set; }
-        public float CloudDensity { get; private set; }
+        public float FogDensity { get; private set; }
+        public float VolumetricCloudsCoverage { get; private set; }
+        public float VolumetricCloudsDensity { get; private set; }
+        public float CloudLayerCoverage { get; private set; }
+        public float CloudLayerDensity { get; private set; }
 
-        public float CameraHeight { get; private set; }
+        public TimeOfDay TimeOfDay => _timeOfDay ??= TimeOfDay.Instance;
+        private TimeOfDay _timeOfDay;
+
 
         public void Update()
         {
@@ -94,24 +103,25 @@ namespace UnityEssentials
 
         private void UpdateVolumeWeights()
         {
-            CameraHeight = GetCurrentRenderingCameraHeight();
+            const float cloudLayerThreshold = 10_000;
+            const float volumetricCloudsThreshold = 50_000;
 
-            float cloudLayerThreshold = 10_000;
-            float volumetricCloudsThreshold = 50_000;
+            var cloudLayerOpacity = 1 - Mathf.Clamp01(TimeOfDay.CameraHeight / cloudLayerThreshold);
+            var volumetricCloudsOpacity = 1 - Mathf.Clamp01(TimeOfDay.CameraHeight / volumetricCloudsThreshold);
 
-            float normCloudLayer = Mathf.Clamp01(CameraHeight / cloudLayerThreshold);
-            float normVolumetric = Mathf.Clamp01(CameraHeight / volumetricCloudsThreshold);
-
-            CloudLayerOpacity = 1 - normCloudLayer;
-            VolumetricCloudsOpacity = 1 - normVolumetric;
+            // Fades out clouds based on camera height when entering outer space
+            VolumetricCloudsDensity *= volumetricCloudsOpacity;
+            CloudLayerDensity *= cloudLayerOpacity;
         }
 
         public void UpdateWeather()
         {
             // Calculate blended weather parameters
             FogDensity = CalculateFogDensity();
-            CloudCoverage = CalculateCloudCoverage();
-            CloudDensity = CalculateCloudDensity();
+            VolumetricCloudsCoverage = CalculateCloudCoverage();
+            VolumetricCloudsDensity = CalculateCloudDensity();
+            CloudLayerCoverage = 1;
+            CloudLayerDensity = 1;
 
             UpdateVolumeWeights();
 
@@ -142,9 +152,9 @@ namespace UnityEssentials
         {
             // Primary coverage from cloud types
             float coverage = CloudCover.Clear * 0.0f
-                          + CloudCover.Sparse * 0.3f
-                          + CloudCover.Cloudy * 0.7f
-                          + CloudCover.Overcast * 1.0f;
+                           + CloudCover.Sparse * 0.3f
+                           + CloudCover.Cloudy * 0.7f
+                           + CloudCover.Overcast * 1.0f;
 
             // Weather impacts on coverage
             coverage += SevereWeather.Stormy * 0.4f
@@ -161,7 +171,7 @@ namespace UnityEssentials
         private float CalculateCloudDensity()
         {
             // Base density from cloud types
-            float density = CloudCover.Clear * 0.1f
+            float density = (1 - CloudCover.Clear) * 0.1f
                           + CloudCover.Sparse * 0.3f
                           + CloudCover.Cloudy * 0.6f
                           + CloudCover.Overcast * 0.9f;
@@ -178,60 +188,67 @@ namespace UnityEssentials
             return Mathf.Clamp01(density);
         }
 
+        private Color _fogBrightColor = new Color(0.9f, 0.9f, 0.92f);
+        private Color _fogDustyColor = new Color(0.7f, 0.65f, 0.6f);
         private void SetFogParameters()
         {
             // Convert density to mean free path (inverse relationship)
             float meanFreePath = Mathf.Lerp(50f, 5f, FogDensity);
 
-            VolumetricFogOverride.enabled.Override(FogDensity > 0.01f);
+            // Fog distance attenuation: more foggy = less distance
+            float fogAttenuation = Mathf.Lerp(1.0f, 0.3f, AtmosphericEffects.Foggy);
+            meanFreePath *= fogAttenuation;
+
+            // Base height and height for low fog
+            // Low fog: base is near ground, height is small; more foggy = thicker fog
+            float lowFog = AtmosphericEffects.Foggy + AtmosphericEffects.Mist;
+            float baseHeight = Mathf.Lerp(10f, 0.5f, lowFog); // Lower base for more low fog
+            float fogHeight = Mathf.Lerp(30f, 120f, lowFog);  // Thicker fog for more low fog
+
+            // Block more visibility for higher values
+            if (lowFog > 0.5f)
+            {
+                // For very dense fog, make it even thicker and lower
+                baseHeight = Mathf.Lerp(baseHeight, 0.1f, (lowFog - 0.5f) * 2f);
+                fogHeight = Mathf.Lerp(fogHeight, 200f, (lowFog - 0.5f) * 2f);
+            }
+
             VolumetricFogOverride.meanFreePath.Override(meanFreePath);
 
+            // Set base height and height if available
+            if (VolumetricFogOverride.baseHeight != null)
+                VolumetricFogOverride.baseHeight.Override(baseHeight);
+            if (VolumetricFogOverride.maximumHeight != null)
+                VolumetricFogOverride.maximumHeight.Override(fogHeight);
+
             // Adjust fog color based on conditions
-            Color fogColor = Color.Lerp(
-                new Color(0.9f, 0.9f, 0.92f),
-                new Color(0.7f, 0.65f, 0.6f),
-                AtmosphericEffects.Dusty + SevereWeather.Sandstorm);
+            var dustyContribution = AtmosphericEffects.Dusty + SevereWeather.Sandstorm;
+            Color fogColor = Color.Lerp(_fogBrightColor, _fogDustyColor, dustyContribution);
             VolumetricFogOverride.albedo.Override(fogColor);
         }
 
+        private Color _colorBright = Color.white;
+        private Color _colorDark = new Color(0.4f, 0.4f, 0.45f);
         private void SetCloudParameters()
         {
-            // Volumetric clouds
-            //VolumetricCloudsOverride.cloudCoverage.Override(CloudCoverage);
-            //VolumetricCloudsOverride.densityMultiplier.Override(
-            //    Mathf.Lerp(0.2f, 1.5f, CloudDensity));
+            // Update cloud coverage and density based on weather conditions
+            VolumetricCloudsOverride.shapeFactor.Override(VolumetricCloudsCoverage.Remap(0, 1, 1, 0.5f));
+            VolumetricCloudsOverride.densityMultiplier.Override(VolumetricCloudsDensity);
+            // Eliminates blue tint from clouds at night
+            VolumetricCloudsOverride.ambientLightProbeDimmer.Override(TimeOfDay.DayWeight);
 
-            // Cloud layers
-            //CloudsLayerOverride.densityMultiplier.Override(CloudDensity * 0.8f);
-            //CloudsLayerOverride.opacity.Override(CloudCoverage * 0.9f);
-
-            VolumetricCloudsOverride.densityMultiplier.Override(VolumetricCloudsOpacity);
-            CloudsLayerOverride.opacity.Override(CloudLayerOpacity);
+            CloudsLayerOverride.opacity.Override(CloudLayerDensity);
+            CloudsLayerOverride.layerA.opacityR.Override(CloudCover.Sparse * CloudLayerCoverage);
+            CloudsLayerOverride.layerA.opacityG.Override(CloudCover.Cloudy * CloudLayerCoverage);
+            CloudsLayerOverride.layerA.opacityB.Override(1 - CloudCover.Clear * CloudLayerCoverage);
+            CloudsLayerOverride.layerA.opacityA.Override(CloudCover.Overcast * CloudLayerCoverage);
+            // At least one cloud system should be casting shadows
+            CloudsLayerOverride.shadowMultiplier.Override(Settings.EnableVolumetricClouds ? 0 : 1);
 
             // Darken clouds during severe weather
-            float darkenAmount = Mathf.Clamp01(
-                SevereWeather.Thunderstorm + SevereWeather.Hurricane);
-
-            Color cloudColor = Color.Lerp(
-                Color.white, 
-                new Color(0.4f, 0.4f, 0.45f), 
-                darkenAmount);
+            var darkenAmount = Mathf.Clamp01(SevereWeather.Thunderstorm + SevereWeather.Hurricane);
+            var cloudColor = Color.Lerp(_colorBright, _colorDark, darkenAmount);
             VolumetricCloudsOverride.scatteringTint.Override(cloudColor);
-        }
-
-        private float GetCurrentRenderingCameraHeight()
-        {
-#if UNITY_EDITOR
-            // Prefer SceneView camera if available and focused
-            var sceneView = SceneView.lastActiveSceneView;
-            if (sceneView != null && sceneView.camera != null && sceneView.hasFocus)
-                return Mathf.Max(100, sceneView.camera.transform.position.magnitude);
-#endif
-            // Fallback to main camera
-            if (Camera.main != null)
-                return Mathf.Max(100, Camera.main.transform.position.magnitude);
-
-            return 0f;
         }
     }
 }
