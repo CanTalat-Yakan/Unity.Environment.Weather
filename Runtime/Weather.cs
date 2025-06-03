@@ -135,14 +135,15 @@ namespace UnityEssentials
                            + CloudCover.Cloudy * 0.7f
                            + CloudCover.Overcast * 1.0f;
 
-            // Weather impacts on coverage
-            coverage += SevereWeather.Stormy * 0.4f
-                      + SevereWeather.Thunderstorm * 0.6f
-                      + SevereWeather.Hurricane * 0.8f;
-
             // Precipitation impacts
             coverage += Precipitation.Blizzard * 0.5f
                       + Precipitation.Snowy * 0.3f;
+
+            // Weather impacts on coverage
+            coverage += SevereWeather.Stormy * 0.6f
+                     + SevereWeather.Thunderstorm * 0.7f
+                     + SevereWeather.Tornado * 0.8f
+                     + SevereWeather.Hurricane * 0.9f;
 
             return Mathf.Clamp01(coverage);
         }
@@ -155,14 +156,15 @@ namespace UnityEssentials
                           + CloudCover.Cloudy * 0.6f
                           + CloudCover.Overcast * 0.9f;
 
-            // Weather intensity impacts
-            density += SevereWeather.Thunderstorm * 0.4f
-                     + SevereWeather.Hurricane * 0.5f
-                     + SevereWeather.Tornado * 0.3f;
-
             // Precipitation density contributions
             density += Precipitation.Shower * 0.3f
                      + Precipitation.Blizzard * 0.4f;
+
+            // Weather intensity impacts
+            density += SevereWeather.Stormy * 0.6f
+                     + SevereWeather.Thunderstorm * 0.7f
+                     + SevereWeather.Tornado * 0.8f
+                     + SevereWeather.Hurricane * 0.9f;
 
             return Mathf.Clamp01(density);
         }
@@ -177,7 +179,7 @@ namespace UnityEssentials
             const float baseFogHeight = 50f;
 
             // Target values for each effect at full strength
-            const float foggyDistance = 50f, foggyBaseHeight = 100f, foggyFogHeight = 250f;
+            const float foggyDistance = 100f, foggyBaseHeight = 100f, foggyFogHeight = 250f;
             const float mistDistance = 200f, mistBaseHeight = 5f, mistFogHeight = 80f;
             const float hazyDistance = 200f, hazyBaseHeight = 40f, hazyFogHeight = 120f;
 
@@ -208,7 +210,6 @@ namespace UnityEssentials
                 mistFogHeight * mist +
                 hazyFogHeight * hazy;
 
-            // Optionally, add Dusty/Sandstorm effects to color
             var dustyContribution = AtmosphericEffects.Dusty + SevereWeather.Sandstorm;
             var fogColor = Color.Lerp(_fogBrightColor, _fogDustyColor, dustyContribution);
 
