@@ -73,12 +73,12 @@ namespace UnityEssentials
     [ExecuteAlways]
     public class Weather : MonoBehaviour
     {
-        [HideInInspector] public Volume CloudLayerVolume;
-        [HideInInspector] public CloudLayer CloudLayerOverride;
-        [HideInInspector] public Volume VolumetricCloudsVolume;
-        [HideInInspector] public VolumetricClouds VolumetricCloudsOverride;
-        [HideInInspector] public Volume VolumetricFogVolume;
-        [HideInInspector] public Fog VolumetricFogOverride;
+        public Volume CloudLayerVolume;
+        public CloudLayer CloudLayerOverride;
+        public Volume VolumetricCloudsVolume;
+        public VolumetricClouds VolumetricCloudsOverride;
+        public Volume VolumetricFogVolume;
+        public Fog VolumetricFogOverride;
 
         public CloudsSettings Settings;
         public CloudCoverType CloudCover;
@@ -95,22 +95,18 @@ namespace UnityEssentials
         public TimeOfDay TimeOfDay => _timeOfDay ??= TimeOfDay.Instance;
         private TimeOfDay _timeOfDay;
 
-        public void Update()
+        public void Start()
         {
-            EnsureOverrides();
-            UpdateWeather();
+            VolumetricCloudsVolume.profile.TryGet(out VolumetricCloudsOverride);
+            CloudLayerVolume.profile.TryGet(out CloudLayerOverride);
+            VolumetricFogVolume.profile.TryGet(out VolumetricFogOverride);
         }
+
+        public void Update() =>
+            UpdateWeather();
 
         public void EnsureOverrides()
         {
-            if (VolumetricCloudsOverride == null)
-                VolumetricCloudsVolume?.profile.TryGet(out VolumetricCloudsOverride);
-
-            if (CloudLayerOverride == null)
-                CloudLayerVolume?.profile.TryGet(out CloudLayerOverride);
-
-            if (VolumetricFogOverride == null)
-                VolumetricFogVolume?.profile.TryGet(out VolumetricFogOverride);
         }
 
         public void UpdateWeather()

@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &3093281137181228124
+--- !u!1 &33022600899222642
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,57 +8,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 6823861589880065564}
-  - component: {fileID: 7730018157552857895}
-  m_Layer: 0
-  m_Name: Volumetric Fog Volume
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &6823861589880065564
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3093281137181228124}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -1, z: 1}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 5955971541579168707}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7730018157552857895
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3093281137181228124}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IsGlobal: 1
-  priority: 1
-  blendDistance: 0
-  weight: 1
-  sharedProfile: {fileID: 11400000, guid: 2e28bad117218e347a8ce8f9e1c18e68, type: 2}
---- !u!1 &3526313086034281984
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3373055416523671864}
-  - component: {fileID: 8818500974242742307}
+  - component: {fileID: 6885933908915588014}
+  - component: {fileID: 102366049467280114}
   m_Layer: 0
   m_Name: Volumetric Clouds Volume
   m_TagString: Untagged
@@ -66,28 +17,28 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &3373055416523671864
+--- !u!4 &6885933908915588014
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3526313086034281984}
+  m_GameObject: {fileID: 33022600899222642}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -1, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 5955971541579168707}
+  m_Father: {fileID: 1780373518031513990}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8818500974242742307
+--- !u!114 &102366049467280114
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3526313086034281984}
+  m_GameObject: {fileID: 33022600899222642}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
@@ -97,8 +48,8 @@ MonoBehaviour:
   priority: 1
   blendDistance: 0
   weight: 1
-  sharedProfile: {fileID: 11400000, guid: c603ae1fbcc2dbe41828ce84bc348186, type: 2}
---- !u!1 &5239154734875917007
+  sharedProfile: {fileID: 11400000, guid: ba1b2bad1f2123943b032b60d18dbffc, type: 2}
+--- !u!1 &159812870902023916
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -106,8 +57,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 3445869608376784209}
-  - component: {fileID: 4391923760580700663}
+  - component: {fileID: 6103828409892217905}
+  - component: {fileID: 5889675987104376871}
   m_Layer: 0
   m_Name: Cloud Layer Volume
   m_TagString: Untagged
@@ -115,28 +66,28 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &3445869608376784209
+--- !u!4 &6103828409892217905
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5239154734875917007}
+  m_GameObject: {fileID: 159812870902023916}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -1, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 5955971541579168707}
+  m_Father: {fileID: 1780373518031513990}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4391923760580700663
+--- !u!114 &5889675987104376871
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5239154734875917007}
+  m_GameObject: {fileID: 159812870902023916}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
@@ -146,8 +97,8 @@ MonoBehaviour:
   priority: 1
   blendDistance: 0
   weight: 1
-  sharedProfile: {fileID: 11400000, guid: b46b2fab5bb18b5489e4481889a4015d, type: 2}
---- !u!1 &7073199388694793248
+  sharedProfile: {fileID: 11400000, guid: 4819884f88175fd4388747aeff8e37d7, type: 2}
+--- !u!1 &779115946240097114
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -155,8 +106,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 5955971541579168707}
-  - component: {fileID: 3945389553218147537}
+  - component: {fileID: 1780373518031513990}
+  - component: {fileID: 5779118380144483771}
   m_Layer: 0
   m_Name: UnityEssentials_Prefab_Weather
   m_TagString: Untagged
@@ -164,40 +115,44 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &5955971541579168707
+--- !u!4 &1780373518031513990
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7073199388694793248}
+  m_GameObject: {fileID: 779115946240097114}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 2, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 3445869608376784209}
-  - {fileID: 3373055416523671864}
-  - {fileID: 6823861589880065564}
+  - {fileID: 6103828409892217905}
+  - {fileID: 6885933908915588014}
+  - {fileID: 2443912637753942637}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3945389553218147537
+--- !u!114 &5779118380144483771
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7073199388694793248}
+  m_GameObject: {fileID: 779115946240097114}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0dd7ff8df8e68144c9cc1816f1056abf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   CloudLayerVolume: {fileID: 0}
-  CloudsLayerOverride: {fileID: 0}
+  CloudLayerOverride: {fileID: 0}
   VolumetricCloudsVolume: {fileID: 0}
   VolumetricCloudsOverride: {fileID: 0}
+  VolumetricFogVolume: {fileID: 0}
+  VolumetricFogOverride: {fileID: 0}
+  Settings:
+    EnableVolumetricClouds: 1
   CloudCover:
     Clear: 0
     Sparse: 0
@@ -221,3 +176,52 @@ MonoBehaviour:
     Hazy: 0
     Dusty: 0
     Windy: 0
+--- !u!1 &1054866969556561898
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2443912637753942637}
+  - component: {fileID: 7513739277130498445}
+  m_Layer: 0
+  m_Name: Volumetric Fog Volume
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2443912637753942637
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1054866969556561898}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1780373518031513990}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7513739277130498445
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1054866969556561898}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IsGlobal: 1
+  priority: 1
+  blendDistance: 0
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: 6fa1c5bf617b3b941b6b5a2ee9c823f5, type: 2}
