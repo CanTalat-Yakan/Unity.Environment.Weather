@@ -74,7 +74,7 @@ namespace UnityEssentials
     public class Weather : MonoBehaviour
     {
         [HideInInspector] public Volume CloudLayerVolume;
-        [HideInInspector] public CloudLayer CloudsLayerOverride;
+        [HideInInspector] public CloudLayer CloudLayerOverride;
         [HideInInspector] public Volume VolumetricCloudsVolume;
         [HideInInspector] public VolumetricClouds VolumetricCloudsOverride;
         [HideInInspector] public Volume VolumetricFogVolume;
@@ -103,14 +103,14 @@ namespace UnityEssentials
 
         public void EnsureOverrides()
         {
-            if (VolumetricCloudsVolume != null && VolumetricCloudsOverride == null)
-                VolumetricCloudsVolume.profile.TryGet(out VolumetricCloudsOverride);
+            if (VolumetricCloudsOverride == null)
+                VolumetricCloudsVolume?.profile.TryGet(out VolumetricCloudsOverride);
 
-            if (CloudLayerVolume != null && CloudsLayerOverride == null)
-                CloudLayerVolume.profile.TryGet(out CloudsLayerOverride);
+            if (CloudLayerOverride == null)
+                CloudLayerVolume?.profile.TryGet(out CloudLayerOverride);
 
-            if (VolumetricFogVolume != null && VolumetricFogOverride == null)
-                VolumetricFogVolume.profile.TryGet(out VolumetricFogOverride);
+            if (VolumetricFogOverride == null)
+                VolumetricFogVolume?.profile.TryGet(out VolumetricFogOverride);
         }
 
         public void UpdateWeather()
@@ -228,6 +228,9 @@ namespace UnityEssentials
             var dustyContribution = AtmosphericEffects.Dusty + SevereWeather.Sandstorm;
             var fogColor = Color.Lerp(_fogBrightColor, _fogDustyColor, dustyContribution);
 
+            if (VolumetricFogOverride == null)
+                return;
+
             // Apply to volume overrides
             VolumetricFogOverride.meanFreePath.Override(meanFreePath);
             VolumetricFogOverride.baseHeight.Override(baseHeight);
@@ -244,6 +247,9 @@ namespace UnityEssentials
         private Color _colorDark = new Color(0.4f, 0.4f, 0.45f);
         private void SetCloudParameters()
         {
+            if (VolumetricCloudsOverride == null || CloudLayerOverride == null)
+                return;
+
             // Update cloud coverage and density based on weather conditions
             VolumetricCloudsOverride.shapeFactor.Override(VolumetricCloudsCoverage.Remap(0, 1, 1, 0.5f));
             VolumetricCloudsOverride.densityMultiplier.Override(VolumetricCloudsDensity);
@@ -251,13 +257,13 @@ namespace UnityEssentials
             VolumetricCloudsOverride.ambientLightProbeDimmer.Override(TimeOfDay.DayWeight);
             VolumetricCloudsOverride.enable.Override(Settings.EnableVolumetricClouds);
 
-            CloudsLayerOverride.opacity.Override(CloudLayerDensity);
-            CloudsLayerOverride.layerA.opacityR.Override(CloudCover.Sparse * CloudLayerCoverage);
-            CloudsLayerOverride.layerA.opacityG.Override(CloudCover.Cloudy * CloudLayerCoverage);
-            CloudsLayerOverride.layerA.opacityB.Override(1 - CloudCover.Clear * CloudLayerCoverage);
-            CloudsLayerOverride.layerA.opacityA.Override(CloudCover.Overcast * CloudLayerCoverage);
+            CloudLayerOverride.opacity.Override(CloudLayerDensity);
+            CloudLayerOverride.layerA.opacityR.Override(CloudCover.Sparse * CloudLayerCoverage);
+            CloudLayerOverride.layerA.opacityG.Override(CloudCover.Cloudy * CloudLayerCoverage);
+            CloudLayerOverride.layerA.opacityB.Override(1 - CloudCover.Clear * CloudLayerCoverage);
+            CloudLayerOverride.layerA.opacityA.Override(CloudCover.Overcast * CloudLayerCoverage);
             // At least one cloud system should be casting shadows
-            CloudsLayerOverride.shadowMultiplier.Override(Settings.EnableVolumetricClouds ? 0 : 1);
+            CloudLayerOverride.shadowMultiplier.Override(Settings.EnableVolumetricClouds ? 0 : 1);
 
             // Darken clouds during severe weather
             var darkenAmount = Mathf.Clamp01(SevereWeather.Thunderstorm + SevereWeather.Hurricane);
