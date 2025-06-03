@@ -95,19 +95,16 @@ namespace UnityEssentials
         public TimeOfDay TimeOfDay => _timeOfDay ??= TimeOfDay.Instance;
         private TimeOfDay _timeOfDay;
 
-
-        public void Update()
-        {
+        public void Update() =>
             UpdateWeather();
-        }
 
         private void UpdateVolumeWeights()
         {
             const float cloudLayerThreshold = 10_000;
             const float volumetricCloudsThreshold = 50_000;
 
-            var cloudLayerOpacity = 1 - Mathf.Clamp01(TimeOfDay.CameraHeight / cloudLayerThreshold);
-            var volumetricCloudsOpacity = 1 - Mathf.Clamp01(TimeOfDay.CameraHeight / volumetricCloudsThreshold);
+            var cloudLayerOpacity = 1 - Mathf.Clamp01(TimeOfDay.CameraDistance / cloudLayerThreshold);
+            var volumetricCloudsOpacity = 1 - Mathf.Clamp01(TimeOfDay.CameraDistance / volumetricCloudsThreshold);
 
             // Fades out clouds based on camera height when entering outer space
             VolumetricCloudsDensity *= volumetricCloudsOpacity;
@@ -120,8 +117,8 @@ namespace UnityEssentials
             FogDensity = CalculateFogDensity();
             VolumetricCloudsCoverage = CalculateCloudCoverage();
             VolumetricCloudsDensity = CalculateCloudDensity();
-            CloudLayerCoverage = 1;
             CloudLayerDensity = 1;
+            CloudLayerCoverage = 1;
 
             UpdateVolumeWeights();
 
@@ -188,43 +185,59 @@ namespace UnityEssentials
             return Mathf.Clamp01(density);
         }
 
-        private Color _fogBrightColor = new Color(0.9f, 0.9f, 0.92f);
-        private Color _fogDustyColor = new Color(0.7f, 0.65f, 0.6f);
+        private Color _fogBrightColor = Color.white;
+        private Color _fogDustyColor = new Color(0.82f, 0.6f, 0.4f);
         private void SetFogParameters()
         {
-            // Convert density to mean free path (inverse relationship)
-            float meanFreePath = Mathf.Lerp(50f, 5f, FogDensity);
+            // Base (clear) values
+            const float baseDistance = 2000f;
+            const float baseBaseHeight = -50f;
+            const float baseFogHeight = 50f;
 
-            // Fog distance attenuation: more foggy = less distance
-            float fogAttenuation = Mathf.Lerp(1.0f, 0.3f, AtmosphericEffects.Foggy);
-            meanFreePath *= fogAttenuation;
+            // Target values for each effect at full strength
+            const float foggyDistance = 50f, foggyBaseHeight = 100f, foggyFogHeight = 250f;
+            const float mistDistance = 200f, mistBaseHeight = 5f, mistFogHeight = 80f;
+            const float hazyDistance = 200f, hazyBaseHeight = 40f, hazyFogHeight = 120f;
 
-            // Base height and height for low fog
-            // Low fog: base is near ground, height is small; more foggy = thicker fog
-            float lowFog = AtmosphericEffects.Foggy + AtmosphericEffects.Mist;
-            float baseHeight = Mathf.Lerp(10f, 0.5f, lowFog); // Lower base for more low fog
-            float fogHeight = Mathf.Lerp(30f, 120f, lowFog);  // Thicker fog for more low fog
+            // Effect weights
+            float foggy = Mathf.Clamp01(AtmosphericEffects.Foggy);
+            float mist = Mathf.Clamp01(AtmosphericEffects.Mist);
+            float hazy = Mathf.Clamp01(AtmosphericEffects.Hazy);
 
-            // Block more visibility for higher values
-            if (lowFog > 0.5f)
-            {
-                // For very dense fog, make it even thicker and lower
-                baseHeight = Mathf.Lerp(baseHeight, 0.1f, (lowFog - 0.5f) * 2f);
-                fogHeight = Mathf.Lerp(fogHeight, 200f, (lowFog - 0.5f) * 2f);
-            }
+            float total = foggy + mist + hazy;
+            float clearWeight = 1f - Mathf.Clamp01(total);
 
-            VolumetricFogOverride.meanFreePath.Override(meanFreePath);
+            // Weighted blend
+            float meanFreePath =
+                baseDistance * clearWeight +
+                foggyDistance * foggy +
+                mistDistance * mist +
+                hazyDistance * hazy;
 
-            // Set base height and height if available
-            if (VolumetricFogOverride.baseHeight != null)
-                VolumetricFogOverride.baseHeight.Override(baseHeight);
-            if (VolumetricFogOverride.maximumHeight != null)
-                VolumetricFogOverride.maximumHeight.Override(fogHeight);
+            float baseHeight =
+                baseBaseHeight * clearWeight +
+                foggyBaseHeight * foggy +
+                mistBaseHeight * mist +
+                hazyBaseHeight * hazy;
 
-            // Adjust fog color based on conditions
+            float fogHeight =
+                baseFogHeight * clearWeight +
+                foggyFogHeight * foggy +
+                mistFogHeight * mist +
+                hazyFogHeight * hazy;
+
+            // Optionally, add Dusty/Sandstorm effects to color
             var dustyContribution = AtmosphericEffects.Dusty + SevereWeather.Sandstorm;
-            Color fogColor = Color.Lerp(_fogBrightColor, _fogDustyColor, dustyContribution);
+            var fogColor = Color.Lerp(_fogBrightColor, _fogDustyColor, dustyContribution);
+
+            // Apply to volume overrides
+            VolumetricFogOverride.meanFreePath.Override(meanFreePath);
+            VolumetricFogOverride.baseHeight.Override(baseHeight);
+            VolumetricFogOverride.maximumHeight.Override(fogHeight);
             VolumetricFogOverride.albedo.Override(fogColor);
+
+            // Workaround to prevent fog on the horizon from appearing in front of buildings
+            VolumetricFogOverride.mipFogMaxMip.Override(Mathf.Clamp01(TimeOfDay.CameraHeight / 100) / 2);
         }
 
         private Color _colorBright = Color.white;
