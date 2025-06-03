@@ -95,8 +95,23 @@ namespace UnityEssentials
         public TimeOfDay TimeOfDay => _timeOfDay ??= TimeOfDay.Instance;
         private TimeOfDay _timeOfDay;
 
-        public void Update() =>
+        public void Update()
+        {
+            EnsureOverrides();
             UpdateWeather();
+        }
+
+        public void EnsureOverrides()
+        {
+            if (VolumetricCloudsVolume != null && VolumetricCloudsOverride == null)
+                VolumetricCloudsVolume.profile.TryGet(out VolumetricCloudsOverride);
+
+            if (CloudLayerVolume != null && CloudsLayerOverride == null)
+                CloudLayerVolume.profile.TryGet(out CloudsLayerOverride);
+
+            if (VolumetricFogVolume != null && VolumetricFogOverride == null)
+                VolumetricFogVolume.profile.TryGet(out VolumetricFogOverride);
+        }
 
         public void UpdateWeather()
         {
