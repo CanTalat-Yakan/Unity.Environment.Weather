@@ -98,7 +98,23 @@ namespace UnityEssentials
         public void Update() =>
             UpdateWeather();
 
-        private void UpdateVolumeWeights()
+        public void UpdateWeather()
+        {
+            // Calculate blended weather parameters
+            VolumetricCloudsCoverage = CalculateCloudCoverage();
+            VolumetricCloudsDensity = CalculateCloudDensity();
+            CloudLayerDensity = 1;
+            CloudLayerCoverage = 1;
+
+            TimeOfDay.CloudCoverage = VolumetricCloudsCoverage;
+
+            UpdateCloudOpacities();
+
+            SetFogParameters();
+            SetCloudParameters();
+        }
+
+        private void UpdateCloudOpacities()
         {
             const float cloudLayerThreshold = 10_000;
             const float volumetricCloudsThreshold = 50_000;
@@ -109,40 +125,6 @@ namespace UnityEssentials
             // Fades out clouds based on camera height when entering outer space
             VolumetricCloudsDensity *= volumetricCloudsOpacity;
             CloudLayerDensity *= cloudLayerOpacity;
-        }
-
-        public void UpdateWeather()
-        {
-            // Calculate blended weather parameters
-            FogDensity = CalculateFogDensity();
-            VolumetricCloudsCoverage = CalculateCloudCoverage();
-            VolumetricCloudsDensity = CalculateCloudDensity();
-            CloudLayerDensity = 1;
-            CloudLayerCoverage = 1;
-
-            UpdateVolumeWeights();
-
-            SetFogParameters();
-            SetCloudParameters();
-        }
-
-        private float CalculateFogDensity()
-        {
-            // Base fog density from atmospheric effects
-            float density = AtmosphericEffects.Foggy * 0.8f
-                          + AtmosphericEffects.Mist * 0.3f
-                          + AtmosphericEffects.Hazy * 0.2f;
-
-            // Precipitation contributions to fog
-            density += Precipitation.Drizzle * 0.4f
-                     + Precipitation.Shower * 0.2f
-                     + Precipitation.Blizzard * 0.6f;
-
-            // Severe weather contributions
-            density += SevereWeather.Sandstorm * 0.7f
-                     + SevereWeather.Stormy * 0.3f;
-
-            return Mathf.Clamp01(density);
         }
 
         private float CalculateCloudCoverage()
@@ -200,9 +182,9 @@ namespace UnityEssentials
             const float hazyDistance = 200f, hazyBaseHeight = 40f, hazyFogHeight = 120f;
 
             // Effect weights
-            float foggy = Mathf.Clamp01(AtmosphericEffects.Foggy);
-            float mist = Mathf.Clamp01(AtmosphericEffects.Mist);
-            float hazy = Mathf.Clamp01(AtmosphericEffects.Hazy);
+            float foggy = AtmosphericEffects.Foggy;
+            float mist = AtmosphericEffects.Mist;
+            float hazy = AtmosphericEffects.Hazy;
 
             float total = foggy + mist + hazy;
             float clearWeight = 1f - Mathf.Clamp01(total);
@@ -235,6 +217,7 @@ namespace UnityEssentials
             VolumetricFogOverride.baseHeight.Override(baseHeight);
             VolumetricFogOverride.maximumHeight.Override(fogHeight);
             VolumetricFogOverride.albedo.Override(fogColor);
+            VolumetricFogOverride.multipleScatteringIntensity.Override(1 - AtmosphericEffects.Dusty);
 
             // Workaround to prevent fog on the horizon from appearing in front of buildings
             VolumetricFogOverride.mipFogMaxMip.Override(Mathf.Clamp01(TimeOfDay.CameraHeight / 100) / 2);
