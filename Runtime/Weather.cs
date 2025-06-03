@@ -217,7 +217,8 @@ namespace UnityEssentials
             VolumetricFogOverride.baseHeight.Override(baseHeight);
             VolumetricFogOverride.maximumHeight.Override(fogHeight);
             VolumetricFogOverride.albedo.Override(fogColor);
-            VolumetricFogOverride.multipleScatteringIntensity.Override(1 - AtmosphericEffects.Dusty);
+            // Reduces blur effect caused by wet fog
+            VolumetricFogOverride.multipleScatteringIntensity.Override(1 - AtmosphericEffects.Dusty); 
 
             // Workaround to prevent fog on the horizon from appearing in front of buildings
             VolumetricFogOverride.mipFogMaxMip.Override(Mathf.Clamp01(TimeOfDay.CameraHeight / 100) / 2);
