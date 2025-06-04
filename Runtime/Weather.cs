@@ -223,7 +223,8 @@ namespace UnityEssentials
                 hazyFogHeight * hazy;
 
             var dustyContribution = AtmosphericEffects.Dusty + SevereWeather.Sandstorm;
-            var fogColor = Color.Lerp(_fogBrightColor, _fogDustyColor, dustyContribution);
+            var volumetricFogColor = Color.Lerp(_fogBrightColor, _fogDustyColor, dustyContribution);
+            var fogColor = _fogBrightColor * 3;
 
             if (VolumetricFogOverride == null)
                 return;
@@ -232,7 +233,8 @@ namespace UnityEssentials
             VolumetricFogOverride.meanFreePath.Override(meanFreePath);
             VolumetricFogOverride.baseHeight.Override(baseHeight);
             VolumetricFogOverride.maximumHeight.Override(fogHeight);
-            VolumetricFogOverride.albedo.Override(fogColor);
+            VolumetricFogOverride.albedo.Override(volumetricFogColor);
+            VolumetricFogOverride.tint.Override(fogColor);
             // Reduces blur effect caused by wet fog
             VolumetricFogOverride.multipleScatteringIntensity.Override(1 - AtmosphericEffects.Dusty);
 
@@ -262,7 +264,7 @@ namespace UnityEssentials
             CloudLayerOverride.layerA.opacityB.Override(1 - CloudCover.Clear * CloudLayerCoverage);
             CloudLayerOverride.layerA.opacityA.Override(CloudCover.Overcast * CloudLayerCoverage);
             // At least one cloud system should be casting shadows
-            CloudLayerOverride.shadowMultiplier.Override(Settings.EnableVolumetricClouds ? 0 : 1);
+            //CloudLayerOverride.shadowMultiplier.Override(Settings.EnableVolumetricClouds ? 0 : 1);
 
             // Darken clouds during severe weather
             var darkenAmount = Mathf.Clamp01(SevereWeather.Thunderstorm + SevereWeather.Hurricane);
