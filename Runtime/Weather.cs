@@ -1,8 +1,8 @@
 using System;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.HighDefinition;
+using static UnityEngine.Rendering.HighDefinition.VolumetricClouds;
 
 namespace UnityEssentials
 {
@@ -68,17 +68,18 @@ namespace UnityEssentials
     public class CloudsSettings
     {
         public bool EnableVolumetricClouds = true;
+        public CloudSimpleMode VolumetricCloudsQuality = CloudSimpleMode.Quality;
     }
 
     [ExecuteAlways]
     public class Weather : MonoBehaviour
     {
-        public Volume CloudLayerVolume;
-        public CloudLayer CloudLayerOverride;
-        public Volume VolumetricCloudsVolume;
-        public VolumetricClouds VolumetricCloudsOverride;
-        public Volume VolumetricFogVolume;
-        public Fog VolumetricFogOverride;
+        [HideInInspector] public Volume CloudLayerVolume;
+        [HideInInspector] public CloudLayer CloudLayerOverride;
+        [HideInInspector] public Volume VolumetricCloudsVolume;
+        [HideInInspector] public VolumetricClouds VolumetricCloudsOverride;
+        [HideInInspector] public Volume VolumetricFogVolume;
+        [HideInInspector] public Fog VolumetricFogOverride;
 
         public CloudsSettings Settings;
         public CloudCoverType CloudCover;
@@ -233,7 +234,7 @@ namespace UnityEssentials
             VolumetricFogOverride.maximumHeight.Override(fogHeight);
             VolumetricFogOverride.albedo.Override(fogColor);
             // Reduces blur effect caused by wet fog
-            VolumetricFogOverride.multipleScatteringIntensity.Override(1 - AtmosphericEffects.Dusty); 
+            VolumetricFogOverride.multipleScatteringIntensity.Override(1 - AtmosphericEffects.Dusty);
 
             // Workaround to prevent fog on the horizon from appearing in front of buildings
             VolumetricFogOverride.mipFogMaxMip.Override(Mathf.Clamp01(TimeOfDay.CameraHeight / 100) / 2);
@@ -245,6 +246,8 @@ namespace UnityEssentials
         {
             if (VolumetricCloudsOverride == null || CloudLayerOverride == null)
                 return;
+
+            VolumetricCloudsOverride.cloudSimpleMode.Override(Settings.VolumetricCloudsQuality);
 
             // Update cloud coverage and density based on weather conditions
             VolumetricCloudsOverride.shapeFactor.Override(VolumetricCloudsCoverage.Remap(0, 1, 1, 0.5f));
