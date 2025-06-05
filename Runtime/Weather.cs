@@ -181,8 +181,10 @@ namespace UnityEssentials
             return Mathf.Clamp01(density);
         }
 
-        private Color _fogBrightColor = Color.white;
-        private Color _fogDustyColor = new Color(0.82f, 0.6f, 0.4f);
+        private Color _fogTintColor = new Color(1.62f, 2.2f, 3f);
+        private Color _fogTintDustyColor = new Color(3f, 2.4f, 1.63f);
+        private Color _fogColor = new Color(1f, 1f, 1f);
+        private Color _fogDustyColor = new Color(1f, 0.96f, 0.92f);
         private void SetFogParameters()
         {
             // Base (clear) values
@@ -223,8 +225,8 @@ namespace UnityEssentials
                 hazyFogHeight * hazy;
 
             var dustyContribution = AtmosphericEffects.Dusty + SevereWeather.Sandstorm;
-            var volumetricFogColor = Color.Lerp(_fogBrightColor, _fogDustyColor, dustyContribution);
-            var fogColor = _fogBrightColor * 3;
+            var volumetricFogColor = Color.Lerp(_fogColor, _fogDustyColor, dustyContribution);
+            var fogColor = Color.Lerp(_fogTintColor, _fogTintDustyColor, dustyContribution);
 
             if (VolumetricFogOverride == null)
                 return;
