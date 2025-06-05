@@ -131,8 +131,8 @@ namespace UnityEssentials
             const float cloudLayerThreshold = 10_000;
             const float volumetricCloudsThreshold = 50_000;
 
-            var cloudLayerOpacity = 1 - Mathf.Clamp01(TimeOfDay.CameraDistance / cloudLayerThreshold);
-            var volumetricCloudsOpacity = 1 - Mathf.Clamp01(TimeOfDay.CameraDistance / volumetricCloudsThreshold);
+            var cloudLayerOpacity = 1 - Mathf.Clamp01(CameraProvider.Distance / cloudLayerThreshold);
+            var volumetricCloudsOpacity = 1 - Mathf.Clamp01(CameraProvider.Distance / volumetricCloudsThreshold);
 
             // Fades out clouds based on camera height when entering outer space
             VolumetricCloudsDensity *= volumetricCloudsOpacity;
@@ -241,7 +241,7 @@ namespace UnityEssentials
             VolumetricFogOverride.multipleScatteringIntensity.Override(1 - AtmosphericEffects.Dusty);
 
             // Workaround to prevent fog on the horizon from appearing in front of buildings
-            VolumetricFogOverride.mipFogMaxMip.Override(Mathf.Clamp01(TimeOfDay.CameraHeight / 100) / 2);
+            VolumetricFogOverride.mipFogMaxMip.Override(Mathf.Clamp01(CameraProvider.Height / 100) / 2);
         }
 
         private Color _colorBright = Color.white;
