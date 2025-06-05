@@ -2,11 +2,10 @@
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
-using UnityEngine.Rendering.HighDefinition;
 
 namespace UnityEssentials
 {
-    public class WeatherEditor
+    public class WeatherPrefabSpawner
     {
         [MenuItem("GameObject/Essentials/Weather", false, priority = 101)]
         private static void InstantiateTimeOfDay(MenuCommand menuCommand)
