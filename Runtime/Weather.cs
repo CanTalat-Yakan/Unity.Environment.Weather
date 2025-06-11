@@ -265,8 +265,8 @@ namespace UnityEssentials
             CloudLayerOverride.layerA.opacityG.Override(CloudCover.Cloudy * CloudLayerCoverage);
             CloudLayerOverride.layerA.opacityB.Override(1 - CloudCover.Clear * CloudLayerCoverage);
             CloudLayerOverride.layerA.opacityA.Override(CloudCover.Overcast * CloudLayerCoverage);
-            // At least one cloud system should be casting shadows
-            //CloudLayerOverride.shadowMultiplier.Override(Settings.EnableVolumetricClouds ? 0 : 1);
+            var cloudLayerShadowOpacity = 1 - Mathf.Clamp01(CameraProvider.Height / 1000);
+            CloudLayerOverride.shadowMultiplier.Override(cloudLayerShadowOpacity);
 
             // Darken clouds during severe weather
             var darkenAmount = Mathf.Clamp01(SevereWeather.Thunderstorm + SevereWeather.Hurricane);
