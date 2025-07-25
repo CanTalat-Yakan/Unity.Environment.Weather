@@ -53,13 +53,13 @@ namespace UnityEssentials
     public class AtmosphericEffectType
     {
         [Tooltip("Thick cloud near the ground reducing visibility.")]
-        [Range(0, 1)] public float Foggy;
+        [Range(0, 1)] public float Foggy = 0.5f;
+        [Tooltip("Determines the visual of the fog to be of higher water consistence.")]
+        [Range(0, 1)] public float Wetness = 0.5f;
         [Tooltip("Thin, light fog.")]
         [Range(0, 1)] public float Mist;
         [Tooltip("Reduced visibility due to fine particles in the air.")]
         [Range(0, 1)] public float Hazy;
-        [Tooltip("Airborne dust reducing visibility.")]
-        [Range(0, 1)] public float Dusty;
         [Tooltip("Strong winds without precipitation.")]
         [Range(0, 1)] public float Windy;
     }
@@ -224,9 +224,9 @@ namespace UnityEssentials
                 mistFogHeight * mist +
                 hazyFogHeight * hazy;
 
-            var dustyContribution = AtmosphericEffects.Dusty + SevereWeather.Sandstorm;
-            var volumetricFogColor = Color.Lerp(_fogColor, _fogDustyColor, dustyContribution);
-            var fogColor = Color.Lerp(_fogTintColor, _fogTintDustyColor, dustyContribution);
+            var wetnessContribution = AtmosphericEffects.Wetness - SevereWeather.Sandstorm;
+            var volumetricFogColor = Color.Lerp(_fogDustyColor, _fogColor, wetnessContribution);
+            var fogColor = Color.Lerp(_fogTintDustyColor, _fogTintColor, wetnessContribution);
 
             if (VolumetricFogOverride == null)
                 return;
@@ -238,7 +238,7 @@ namespace UnityEssentials
             VolumetricFogOverride.albedo.Override(volumetricFogColor);
             VolumetricFogOverride.tint.Override(fogColor);
             // Reduces blur effect caused by wet fog
-            //VolumetricFogOverride.multipleScatteringIntensity.Override(1 - AtmosphericEffects.Dusty);
+            //VolumetricFogOverride.multipleScatteringIntensity.Override(AtmosphericEffects.Wetness);
 
             // Workaround to prevent fog on the horizon from appearing in front of buildings
             VolumetricFogOverride.mipFogMaxMip.Override(Mathf.Clamp01(CameraProvider.Height / 100) / 2);
