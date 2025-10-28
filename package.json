@@ -1,21 +1,12 @@
 {
   "name": "com.unityessentials.weather",
   "version": "1.0.0",
-  "displayName": "UnityEssentials Weather",
+  "displayName": "Unity Environment Weather",
   "description": "This is a part of the UnityEssentials Ecosystem",
-  "unity": "2022.1",
+  "unity": "6000.0",
   "unityRelease": "",
   "dependencies": {
-    "com.unityessentials.core": "1.0.0",
-    "com.unity.render-pipelines.high-definition": "17.1.0",
-    "com.unityessentials.resourceloader": "1.0.0",
-    "com.unityessentials.togglebuttonattribute": "1.0.0",
-    "com.unityessentials.editoricons": "1.0.0",
-    "com.unityessentials.onvaluechangedattribute": "1.0.0",
-    "com.unityessentials.utilityextensions": "1.0.0",
-    "com.unityessentials.cameraprovider": "1.0.0",
-    "com.unityessentials.singleton": "1.0.0",
-    "com.unityessentials.timeofday": "1.0.0"
+    "com.unity.render-pipelines.high-definition": "17.1.0"
   },
   "keywords": [],
   "author": {
