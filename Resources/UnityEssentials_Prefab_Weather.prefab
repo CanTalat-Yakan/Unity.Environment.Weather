@@ -144,7 +144,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0dd7ff8df8e68144c9cc1816f1056abf, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: UnityEssentials.Weather, UnityEssentials.Weather
   CloudLayerVolume: {fileID: 0}
   CloudLayerOverride: {fileID: 0}
   VolumetricCloudsVolume: {fileID: 0}
@@ -153,6 +153,7 @@ MonoBehaviour:
   VolumetricFogOverride: {fileID: 0}
   Settings:
     EnableVolumetricClouds: 1
+    VolumetricCloudsQuality: 1
   CloudCover:
     Clear: 0
     Sparse: 0
@@ -172,9 +173,9 @@ MonoBehaviour:
     Sandstorm: 0
   AtmosphericEffects:
     Foggy: 0
+    Wetness: 0.5
     Mist: 0
     Hazy: 0
-    Dusty: 0
     Windy: 0
 --- !u!1 &1054866969556561898
 GameObject:
