@@ -10,7 +10,7 @@ namespace UnityEssentials
         [MenuItem("GameObject/Essentials/Weather", false, priority = 101)]
         private static void InstantiateTimeOfDay(MenuCommand menuCommand)
         {
-            var prefab = ResourceLoaderEditor.InstantiatePrefab("UnityEssentials_Prefab_Weather", "Weather");
+            var prefab = AssetResolverEditor.InstantiatePrefab("UnityEssentials_Prefab_Weather", "Weather");
             if (prefab != null)
             {
                 var weather = prefab.GetComponent<Weather>();
